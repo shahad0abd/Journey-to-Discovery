@@ -1,0 +1,111 @@
+
+header {
+display: flex;
+background-color: #7F5539;
+padding: .5em;
+margin: 0;
+width: 100%;
+box-sizing: border-box;
+}
+
+.links{
+margin-left: auto;
+
+}
+
+
+nav {
+display: flex;
+justify-content: space-between; 
+align-items: center; 
+width: 100%;
+color: #ffffff;
+font-weight: bold;
+}
+
+nav ul {
+list-style-type: none;
+margin: 0;
+padding: 0;
+display: flex;
+align-items: center;
+}
+
+nav ul li {
+margin: 0 1em;
+}
+
+nav ul li a {
+color: #ffffff;
+font-weight: bold;
+}
+
+body {
+font-family: Arial, sans-serif;
+background-color: #F0EAD2;
+color: #333333;
+margin: 0;
+padding: 0;
+}
+
+.main{
+display: block;
+margin: 3em;
+background-color: #F0EAD2;
+border-radius: .5em;
+padding: 2em;
+border: .1em solid #ccc;
+background-color: #ffffff;
+box-sizing: border-box;
+   
+}
+    
+
+.caption{
+display: flex;
+justify-content: space-between; 
+align-items: center; 
+}
+
+#name{
+margin-left: 3em;
+}
+
+.addLink{
+color: #333333;
+font-weight: bold;
+margin-right:0.5em;
+
+}
+
+table{
+font-family: Arial; 
+text-align: center; 
+border-style: solid;
+width: 100%;
+background-color:#ffffff;
+border-collapse: collapse;
+table-layout: auto;
+}
+
+thead th{
+background-color: #BE986D
+}
+
+table, th, td {
+border: .1em solid #ccc;
+padding: 0.8em;
+}
+
+.editLinks{
+color: #333333;
+font-weight: bold;
+font-size: 0.8em;
+
+}
+
+td a {
+    display: inline;
+}
+
+
