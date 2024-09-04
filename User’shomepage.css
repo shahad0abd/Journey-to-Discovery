@@ -1,18 +1,20 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #F4F6F9;
+    background-color: #F0EAD2;
     color: #333333;
     margin: 0;
     padding: 0;
 }
 
 header {
-    background-color: #593117;
+    background-color: #7F5539;
     padding: 10px 20px;
     margin: 0;
+    margin-bottom: 20px; /* Adds space between the header and the body content */
     width: 100%;
     box-sizing: border-box;
 }
+
 
 nav {
     display: flex;
@@ -116,12 +118,26 @@ th, td {
 }
 
 th {
-    background-color: #c9a189;
+    background-color: #be986d;
     color: #ffffff;
 }
 
 td img {
-    width: 50px;
+    width: 70px; /* Rectangle dimensions */
     height: 50px;
-    border-radius: 50%;
+     border-radius: 5px;
+}
+/* Ensure the table cell content in the Traveller column is stacked vertically */
+.traveller-info {
+    display: flex;
+    flex-direction: column; /* Stacks items vertically */
+    align-items: center; /* Center aligns items horizontally */
+    padding: 10px;
+}
+
+.traveller-info img {
+    width: 50px; /* Adjust size as needed */
+    height: 50px;
+    margin-top: 5px; /* Space between the name and the image */
+    border-radius: 0; /* Ensures no rounded corners for square or rectangle */
 }
