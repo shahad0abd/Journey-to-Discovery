@@ -11,21 +11,12 @@
 </head>
 
 <body>
-	<header>
-		<nav>
-			<h4 id="name">Kate's Travels</h4>
-			
-			<ul class="links">
-				<li><a href="homepage.html">Back to Homepage</a></li>
-				<li><a href="login.html">Log Out</a></li>
-			</ul>
-			
-		</nav>
-	</header>
+	
 	<main>
 		<div class="NewTravel">
 			<h1>New Travel</h1>
-			<form>
+			<form class="newTravel">
+			
 			<div class="travelMonth">
 				<label for="travelTime">Travel Time: 
 				<select name="month" id="travelTime">
@@ -62,11 +53,13 @@
 				</select>
 				</label>
 				</div>
-				<button class="nextButton">Next</button>
+				
+				<button id="nextButton"onclick="nextPage()">Next</button>
+				
 			</form>
 	
 		</div>
 	</main>
-
+			
 </body>
 </html>
