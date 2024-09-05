@@ -185,7 +185,7 @@ button{
     font-size: 1em;
 }
 
-.buttons input[type=submit]{
+.buttons button{
 margin: 1.2em;
 width: 40%;
 padding: .5em;
@@ -198,7 +198,7 @@ font-size: 1em;
 }
 
 
-button:hover , input[type=submit]:hover{
+button:hover{
 background-color: #5f4031;
 }
 
