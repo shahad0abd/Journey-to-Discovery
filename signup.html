@@ -6,10 +6,14 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="signup.css">
 </head>
+
 <body>
+    <header>
+        <img src="\images\Web2-logo.jpg" alt="Logo" class="logo">
+    </header>
     <main>
         <h1>Create Your Account</h1>
-        <form id="signup-form" action="user_homepage.html" method="post" enctype="multipart/form-data">
+        <form id="signup-form">
             <div class="form-group">
                 <label for="first-name">First Name</label>
                 <input type="text" id="first-name" name="first-name" required>
@@ -41,16 +45,21 @@
 
     <script>
         document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent the default form submission
+            
             const photoInput = document.getElementById('photo');
             if (photoInput.files.length === 0) {
-                // Set a default photo if none is uploaded
-                const defaultPhotoUrl = 'default-photo.png'; // Change to your default photo URL
+                // If no photo is uploaded, set a default photo URL
+                const defaultPhotoUrl = 'default-photo.png';  // Change this to your actual default photo URL
                 const defaultPhotoInput = document.createElement('input');
                 defaultPhotoInput.type = 'hidden';
                 defaultPhotoInput.name = 'default-photo';
                 defaultPhotoInput.value = defaultPhotoUrl;
                 this.appendChild(defaultPhotoInput);
             }
+
+            // Simulate form submission and redirect to user homepage
+            window.location.href = 'User’shomepage.html';
         });
     </script>
 </body>
