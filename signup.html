@@ -9,7 +9,7 @@
 <body>
     <main>
         <h1>Create Your Account</h1>
-        <form id="signup-form" action="user_homepage.html" method="post" enctype="multipart/form-data">
+        <form id="signup-form" action="User’shomepage.html" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="first-name">First Name</label>
                 <input type="text" id="first-name" name="first-name" required>
@@ -44,7 +44,7 @@
             const photoInput = document.getElementById('photo');
             if (photoInput.files.length === 0) {
                 // Set a default photo if none is uploaded
-                const defaultPhotoUrl = 'default-photo.png'; // Change to your default photo URL
+                const defaultPhotoUrl = 'images\defultphoto.png'; // Change to your default photo URL
                 const defaultPhotoInput = document.createElement('input');
                 defaultPhotoInput.type = 'hidden';
                 defaultPhotoInput.name = 'default-photo';
