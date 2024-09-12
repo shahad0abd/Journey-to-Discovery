@@ -24,8 +24,8 @@ header {
 }
 
 .logo {
-    height: 50px;
-    width: auto;
+    height: 80px;  /* Increase the height */
+    width: auto;   /* Keep the width proportional */
 }
 
 main {
@@ -66,11 +66,12 @@ main {
 .sign-up-section {
     display: flex;
     align-items: center;
+    justify-content: center; /* Center them properly */
     margin-top: 20px;
 }
 
 .sign-up-section p {
     font-size: 1.1em;
-    margin-right: -20px; /* Reduced margin to bring text closer to the button */
-    margin-bottom: 0; /* Removed bottom margin to avoid extra spacing */
+    margin-right: 10px; /* Increase the margin to give more space */
+    margin-bottom: 0;
 }
