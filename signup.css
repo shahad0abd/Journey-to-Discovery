@@ -58,3 +58,18 @@ h1 {
 .signup-btn:hover {
     background-color: #6b432f;
 }
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    background-color: #7F5539;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.logo {
+    height: 50px;
+    width: auto;
+}

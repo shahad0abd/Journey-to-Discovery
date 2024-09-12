@@ -60,12 +60,14 @@ main {
     margin-bottom: 20px;
 }
 
+
 .place-photo {
-    width: 60%;
-    height: auto;
+    height: 100px;
+    width: 100px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
+
 
 .likes-comments {
     padding: 15px;
