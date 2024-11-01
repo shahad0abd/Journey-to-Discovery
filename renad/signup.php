@@ -40,7 +40,7 @@ function isEmailExists($conn, $email) {
  * @return bool True on success, false on failure.
  */
 function registerUser($conn, $firstName, $lastName, $email, $hashedPassword, $photo) {
-    $stmt = $conn->prepare("INSERT INTO users (firstName, lastName, emailAddress, password, photoFileName) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO User (firstName, lastName, emailAddress, password, photoFileName) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $firstName, $lastName, $email, $hashedPassword, $photo);
     $success = $stmt->execute();
     $stmt->close(); // Close the statement
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         document.getElementById("signup-form").addEventListener("submit", function(event) {
             event.preventDefault(); // Prevents the default form submission
             // Optionally, add some validation here for better user experience
-            window.location.href = "User’shomepage.html"; // Redirect to user home page
+            window.location.href = "User’shomepage.php"; // Redirect to user home page
         });
     </script>
 </body>

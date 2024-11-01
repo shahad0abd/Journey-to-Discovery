@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.getElementById("login-form").addEventListener("submit", function(event) {
             event.preventDefault(); // Prevents the default form submission
             // Optionally, add some validation here for better user experience
-            window.location.href = "User’shomepage.html"; // Redirect to user home page
+            window.location.href = "User’shomepage.php"; // Redirect to user home page
         });
     </script>
     
