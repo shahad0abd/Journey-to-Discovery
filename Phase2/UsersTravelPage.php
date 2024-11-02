@@ -41,7 +41,7 @@ $result2 = mysqli_query($connection, $sqlTravel);
 			
 			
 			<ul class="links">
-				<li><a href="User’shomepage.php">Back to Homepage</a></li>
+				<li><a href="User'shomepage.php">Back to Homepage</a></li>
                                 <li><a href="index.php">Log Out</a></li>
 			</ul>
 			
@@ -73,64 +73,72 @@ $result2 = mysqli_query($connection, $sqlTravel);
 				</tr>
 				</thead>
 				<tbody>
-				
-				<tr>
-                                    <?php
-                                    if($result2 && mysqli_num_rows($result2) > 0){
-                                        $index = 1;
-                                   while($travel = mysqli_fetch_assoc($result2)){
-                                       
-                                        $sqlCountry = "SELECT * FROM Country WHERE id=".$travel['countryID'];
+				<?php
+                                if ($result2 && mysqli_num_rows($result2) > 0) {
+                                    $index = 1;
+                                    while ($travel = mysqli_fetch_assoc($result2)) {
+                                        $sqlCountry = "SELECT * FROM Country WHERE id=" . $travel['countryID'];
                                         $result3 = mysqli_query($connection, $sqlCountry);
                                         $country = mysqli_fetch_assoc($result3);
-                                        
-					echo "<td rowspan='2'>{$index}<br><br>";
-					echo "<a href='' class='editLinks'>Edit Travel Details</a><br>";
-                                        echo "-<br>";
-					echo "<a href='' class='editLinks'>Delete Travel</a></td>";
-                                        echo "<td rowspan='2'>".$travel['month']."<br>".$travel['year']."</td>";
-					echo "<td rowspan='2'>".$country['country']."</td>";
-                                        
-                                        
-                                        $sqlPlace = "SELECT * FROM Place WHERE travelID=".$travel['id'];
+
+                                        $sqlPlace = "SELECT * FROM Place WHERE travelID=" . $travel['id'];
                                         $result4 = mysqli_query($connection, $sqlPlace);
-                                        
-                                        if($result4 && mysqli_num_rows($result4) > 0){
-                                            while($place = mysqli_fetch_assoc($result4)){
-                                                echo "<td>".$place['name']."</td>";       
-                                                echo "<td>".$place['location']."</td>";
-                                                echo "<td>".$place['description']."</td>";
-                                                echo "<td><img src=".$place['photoFileName']." alt='Mountain Fuji' width='80' ></td>";
-                                                $sqlLikes = "SELECT COUNT(*) AS likeCount FROM `Like` WHERE placeID=".$place['id'];
+
+                                        $firstPlaceRow = true;
+
+                                        if ($result4 && mysqli_num_rows($result4) > 0) {
+                                            while ($place = mysqli_fetch_assoc($result4)) {
+                                                echo "<tr>";
+
+                                                if ($firstPlaceRow) {
+                                                    echo "<td rowspan='" . mysqli_num_rows($result4) . "'>{$index}<br><br>";
+                                                    echo "<a href='TravelDetails.php?travel_id=" . urlencode($travel['id']) . "' class='editLinks'>Edit Travel Details</a><br>";
+                                                    echo "<br>";
+                                                    echo "<a href='deleteTravel.php?travel_id=" . urlencode($travel['id']) . "' class='editLinks'>Delete Travel</a></td>";
+                                                    echo "<td rowspan='" . mysqli_num_rows($result4) . "'>" . $travel['month'] . "<br>" . $travel['year'] . "</td>";
+                                                    echo "<td rowspan='" . mysqli_num_rows($result4) . "'>" . $country['country'] . "</td>";
+                                                    $firstPlaceRow = false;
+                                                }
+
+                                                echo "<td>" . $place['name'] . "</td>";       
+                                                echo "<td>" . $place['location'] . "</td>";
+                                                echo "<td>" . $place['description'] . "</td>";
+                                                echo "<td><img src=" . $place['photoFileName'] . " alt='Mountain Fuji' width='80' ></td>";
+
+                                                $sqlLikes = "SELECT COUNT(*) AS likeCount FROM `Like` WHERE placeID=" . $place['id'];
                                                 $result5 = mysqli_query($connection, $sqlLikes);
                                                 $likes = mysqli_fetch_assoc($result5);
-                                                echo "<td>&#9829; ".$likes['likeCount']."</td>";
-                                                $allComments = "";
-                                                $sqlComments = "SELECT * FROM `Comment` WHERE placeID = ".$place['id'];
-                                                $commentsResult = mysqli_query($connection, $sqlComments);
-                                       
-                                                while($comment = mysqli_fetch_assoc($commentsResult)){
-                                                    $sqlUserName = "SELECT u.firstName 
-                                                                    FROM `User` u
-                                                                    WHERE u.id = ".$comment['userID'];
+                                                echo "<td>&#9829; " . $likes['likeCount'] . "</td>";
 
+                                                $allComments = "";
+                                                $sqlComments = "SELECT * FROM `Comment` WHERE placeID = " . $place['id'];
+                                                $commentsResult = mysqli_query($connection, $sqlComments);
+
+                                                while ($comment = mysqli_fetch_assoc($commentsResult)) {
+                                                    $sqlUserName = "SELECT u.firstName FROM `User` u WHERE u.id = " . $comment['userID'];
                                                     $userResult = mysqli_query($connection, $sqlUserName);
                                                     $userNames = mysqli_fetch_assoc($userResult);
                                                     $allComments .= $userNames['firstName'] . ":<br>" . $comment['comment'] . "<br><br>";
                                                 }
                                                 echo "<td>" . $allComments . "</td>";
-                                        
-                                        }}
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            
+                                            echo "<tr>";
+                                            echo "<td>{$index}<br><br><a href='TravelDetails.php?travel_id=" . urlencode($travel['id']) . "' class='editLinks'>Edit Travel Details</a><br>";
+                                            echo "-<br><a href='deleteTravel.php?travel_id=" . urlencode($travel['id']) . "' class='editLinks'>Delete Travel</a></td>";
+                                            echo "<td>" . $travel['month'] . "<br>" . $travel['year'] . "</td>";
+                                            echo "<td>" . $country['country'] . "</td>";
+                                            echo "<td colspan='6'>No places found for this travel.</td>";
+                                            echo "</tr>";
+                                        }
                                         $index++;
-                                    }}
-                                    else {
-                                         echo "<tr><td colspan='9'>No travels found.</td></tr>";
-                                         }
-                                    ?>
-				</tr>
-				
-				
-				
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='9'>No travels found.</td></tr>";
+                                }
+                                ?>
 				</tbody>
 			</table>
 			</div>

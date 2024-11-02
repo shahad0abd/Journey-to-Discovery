@@ -35,7 +35,7 @@ if( $_SERVER['REQUEST_METHOD']=="POST"){
 if (mysqli_stmt_affected_rows($stmtInsert) > 0) {
     echo "Travel details successfully inserted!";
     $newTravelID = mysqli_insert_id($connection);
-    
+    echo "New Travel ID: " . htmlspecialchars($newTravelID);
     echo '
         <form id="redirectForm" action="AddNewTravel2.php" method="post">
             <input type="hidden" name="travel_id" value="' . htmlspecialchars($newTravelID) . '">

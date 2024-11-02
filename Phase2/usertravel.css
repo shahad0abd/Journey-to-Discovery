@@ -176,7 +176,7 @@ margin-left: 0;
 }
 
 
-input[type="submit"]{
+input[type="submit"], button{
     width: 100%;
     padding: .8em;
     background-color: #7F5539;
@@ -187,7 +187,7 @@ input[type="submit"]{
     font-size: 1em;
 }
 
-.buttons input[type="submit"]{
+.buttons button, input[type="submit"]{
 margin: 1.2em;
 width: 40%;
 padding: .5em;
@@ -200,6 +200,6 @@ font-size: 1em;
 }
 
 
-input[type="submit"]:hover {
+input[type="submit"],button:hover {
 	background-color: #5f4031;
 }
