@@ -1,0 +1,128 @@
+/* General styles and background */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F0EAD2;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensures the entire page uses the same box-sizing model */
+}
+
+*, *:before, *:after {
+    box-sizing: inherit; /* Include padding and border in element's total width */
+}
+
+header {
+    background-color: #7F5539;
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    color: #ffffff;
+}
+
+.nav-right ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-right ul li {
+    margin: 0 15px;
+}
+
+.nav-right ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+}
+
+/* Form section titles and styles */
+h1 {
+    text-align: center;
+    color: #7F5539;
+}
+
+form {
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #000; /* Black border around each section */
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+input[type="text"],
+textarea,
+select,
+input[type="number"],
+input[type="file"] {
+    width: 100%; /* Make sure the fields fit within the container */
+    max-width: 100%; /* Prevent fields from exceeding the container width */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-sizing: border-box; /* Ensures padding and borders are included in the element's width */
+}
+
+textarea {
+    height: 80px;
+}
+
+.current-photo {
+    margin-top: 10px;
+}
+
+.current-photo img {
+    max-width: 100px;
+    height: auto;
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    background-color: #7F5539;
+    color: #040404;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #5f4031;
+}
