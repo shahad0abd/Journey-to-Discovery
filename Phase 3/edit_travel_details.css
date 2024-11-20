@@ -1,0 +1,128 @@
+/* General styles and background */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F0EAD2;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* Full Width Header with Centered Title */
+header {
+    background-color: #7F5539;
+    height: 80px; /* Adjust height as necessary */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure Title Text is Centered and White */
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff !important; /* Force color to white */
+    margin: 0;
+}
+
+
+
+
+/* Title at the top of the form */
+.page-title {
+    background-color: #7F5539;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+form {
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea,
+select,
+input[type="number"],
+input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+textarea {
+    height: 80px;
+}
+
+.place-info {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.photo-upload-section .current-photo {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.current-photo img {
+    max-width: 100px;
+    height: auto;
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #7F5539 !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+input[type="submit"]:hover {
+    background-color: #5f4031;
+}
