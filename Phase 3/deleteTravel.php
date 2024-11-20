@@ -36,7 +36,7 @@ if (isset($_GET['travel_id'])) {
     while ($place = mysqli_fetch_assoc($result)) {
         $photoPath = 'images/' . $place['photoFileName'];
         if (file_exists($photoPath)) {
-            unlink($photoPath);  // Delete the photo file
+            unlink($photoPath);  
         }
     }
     mysqli_stmt_close($stmt);
