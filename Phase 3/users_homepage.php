@@ -21,29 +21,6 @@ $userQuery->bind_param("i", $user_id);
 $userQuery->execute();
 $userResult = $userQuery->get_result();
 $user = $userResult->fetch_assoc();
-
-// Handle filtering request for travels by country
-$countryFilter = isset($_POST['country']) ? $_POST['country'] : 'all';
-
-// Prepare query for all travels or filtered by country
-$travelQuery = "SELECT t.*, u.firstName, u.photoFileName AS userPhotoFileName, c.country,
-                (SELECT COUNT(*) FROM `like` l WHERE l.placeID = p.id) as totalLikes,
-                p.photoFileName AS placePhotoFileName
-                FROM travel t
-                JOIN user u ON t.userID = u.id
-                JOIN country c ON t.countryID = c.id
-                JOIN place p ON p.travelID = t.id";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $countryFilter != 'all') {
-    $travelQuery .= " WHERE t.countryID = ?";
-    $stmt = $connection->prepare($travelQuery);
-    $stmt->bind_param("i", $countryFilter);
-} else {
-    $stmt = $connection->prepare($travelQuery);
-}
-
-$stmt->execute();
-$travelsResult = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -93,22 +70,19 @@ $travelsResult = $stmt->get_result();
 
     <div class="travels">
         <h2>All Travels</h2>
-        <form method="POST">
-            <div class="filter-section">
-                <label for="country-filter">Select Country: </label>
-                <select id="country-filter" name="country">
-                    <option value="all">All</option>
-                    <?php
-                    $countryQuery = "SELECT * FROM country";
-                    $countries = $connection->query($countryQuery);
-                    while ($country = $countries->fetch_assoc()) {
-                        echo '<option value="' . htmlspecialchars($country['id']) . '">' . htmlspecialchars($country['country']) . '</option>';
-                    }
-                    ?>
-                </select>
-                <button type="submit">Filter</button>
-            </div>
-        </form>
+        <div class="filter-section">
+            <label for="country-filter">Select Country: </label>
+            <select id="country-filter" name="country">
+                <option value="all">All</option>
+                <?php
+                $countryQuery = "SELECT * FROM country";
+                $countries = $connection->query($countryQuery);
+                while ($country = $countries->fetch_assoc()) {
+                    echo '<option value="' . htmlspecialchars($country['id']) . '">' . htmlspecialchars($country['country']) . '</option>';
+                }
+                ?>
+            </select>
+        </div>
 
         <div class="table-container">
             <table>
@@ -121,34 +95,63 @@ $travelsResult = $stmt->get_result();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($travel = $travelsResult->fetch_assoc()) { 
-                        $placePhotoPath = "images/" . $travel['placePhotoFileName'];
-                        $displayPhotoPath = !empty($travel['placePhotoFileName']) && file_exists($placePhotoPath) ? $placePhotoPath : 'images/defaultphoto.png';
-                    ?>
-                    <tr>
-                        <td class="traveller-info">
-                            <!-- Traveller's name with link to travel details -->
-                            <a href="javascript:void(0);" onclick="redirectToDetails(<?php echo htmlspecialchars($travel['id']); ?>)">
-                                <?php echo htmlspecialchars($travel['firstName']); ?>
-                            </a>
-
-                            <!-- Place photo that opens in a new tab showing the full image -->
-                            <a href="<?php echo htmlspecialchars($displayPhotoPath); ?>" target="_blank">
-                                <img src="<?php echo htmlspecialchars($displayPhotoPath); ?>" alt="Place Photo">
-                            </a>
-                        </td>
-                        <td><?php echo htmlspecialchars($travel['country']); ?></td>
-                        <td><?php echo htmlspecialchars($travel['month'] . ' ' . $travel['year']); ?></td>
-                        <td><?php echo htmlspecialchars($travel['totalLikes']); ?></td>
-                    </tr>
-                    <?php } ?>
+                    <!-- AJAX will populate this -->
                 </tbody>
             </table>
         </div>            
     </div>
 </div>
 
+<!-- Add the JavaScript here -->
 <script>
+// Fetch and display all travels on page load
+document.addEventListener('DOMContentLoaded', function () {
+    fetchTravels('all'); // Fetch all travels
+});
+
+// Add event listener for country filter changes
+document.getElementById('country-filter').addEventListener('change', function () {
+    const countryID = this.value; // Get selected country ID
+    fetchTravels(countryID); // Fetch travels based on the selected country
+});
+
+// Function to fetch travels based on the selected country
+function fetchTravels(countryID) {
+    fetch('fetch_filtered_travels.php?country=' + countryID)
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+            const tableBody = document.querySelector('.table-container tbody');
+            tableBody.innerHTML = ''; // Clear the table
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4">No travels found.</td></tr>';
+                return;
+            }
+
+            // Populate the table with new data
+            data.forEach(travel => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="traveller-info">
+                        <a href="javascript:void(0);" onclick="redirectToDetails(${travel.id})">
+                            ${travel.firstName}
+                        </a>
+                        <a href="images/${travel.placePhotoFileName}" target="_blank">
+                            <img src="images/${travel.placePhotoFileName}" alt="Place Photo">
+                        </a>
+                    </td>
+                    <td>${travel.country}</td>
+                    <td>${travel.month} ${travel.year}</td>
+                    <td>${travel.totalLikes}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching travels:', error);
+        });
+}
+
 function redirectToDetails(travelId) {
     var form = document.createElement("form");
     form.method = "POST";

@@ -6,10 +6,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Ensure travel ID is received as a POST parameter
+// Ensure travel ID is received as a POST or GET parameter
 if (isset($_POST['travel_id'])) {
     $travelID = $_POST['travel_id'];
-} elseif (isset($_GET['travelID'])) { // Optional: if you want to support GET for direct links
+} elseif (isset($_GET['travelID'])) { 
     $travelID = $_GET['travelID'];
 } else {
     die("Travel ID not specified.");
@@ -52,6 +52,7 @@ $places = $placesQuery->get_result()->fetch_all(MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Details</title>
     <link rel="stylesheet" href="travel_details.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -73,13 +74,11 @@ $places = $placesQuery->get_result()->fetch_all(MYSQLI_ASSOC);
             <?php foreach ($places as $place): ?>
                 <div class="place">
                     <!-- Like Button -->
-                    <form action="add_like.php" method="post" style="display: inline;">
-                        <input type="hidden" name="placeID" value="<?php echo htmlspecialchars($place['placeID']); ?>">
-                        <input type="hidden" name="travelID" value="<?php echo htmlspecialchars($travelID); ?>">
-                        <button type="submit" class="like-btn" <?php echo userAlreadyLiked($connection, $userID, $place['placeID']) ? 'disabled' : ''; ?>>
-                            Like (<span id="like-count-<?php echo $place['placeID']; ?>"><?php echo $place['likes']; ?></span>)
-                        </button>
-                    </form>
+                    <button id="like-btn-<?php echo $place['placeID']; ?>" class="like-btn" 
+    <?php echo userAlreadyLiked($connection, $userID, $place['placeID']) ? 'disabled' : ''; ?>
+    onclick="likePlace(<?php echo $place['placeID']; ?>)">
+    Like (<span id="like-count-<?php echo $place['placeID']; ?>"><?php echo $place['likes']; ?></span>)
+</button>
 
                     <h3><?php echo htmlspecialchars($place['name']); ?></h3>
 
@@ -98,33 +97,99 @@ $places = $placesQuery->get_result()->fetch_all(MYSQLI_ASSOC);
 
                     <!-- Comment Section -->
                     <div class="comment-section">
-                        <form action="add_comment.php" method="post" class="comment-form">
-                            <input type="hidden" name="travelID" value="<?php echo $travelID; ?>">
-                            <input type="hidden" name="placeID" value="<?php echo $place['placeID']; ?>">
-                            <textarea name="comment" placeholder="Add a comment..." required></textarea>
-                            <button type="submit">Add Comment</button>
-                        </form>
+    <textarea id="comment-<?php echo $place['placeID']; ?>" placeholder="Add a comment..." required></textarea>
+    <button onclick="addComment(<?php echo $place['placeID']; ?>)">Add Comment</button>
 
-                        <div class="comment-list">
-                            <?php
-                            $commentQuery = $connection->prepare("SELECT U.firstName, C.comment 
-                                                                 FROM Comment C 
-                                                                 JOIN User U ON C.userID = U.id 
-                                                                 WHERE C.placeID = ?");
-                            $commentQuery->bind_param("i", $place['placeID']);
-                            $commentQuery->execute();
-                            $comments = $commentQuery->get_result();
+    <div id="comments-<?php echo $place['placeID']; ?>">
+        <?php
+        $commentQuery = $connection->prepare("SELECT U.firstName, C.comment 
+                                             FROM Comment C 
+                                             JOIN User U ON C.userID = U.id 
+                                             WHERE C.placeID = ?");
+        $commentQuery->bind_param("i", $place['placeID']);
+        $commentQuery->execute();
+        $comments = $commentQuery->get_result();
 
-                            while ($comment = $comments->fetch_assoc()):
-                            ?>
-                                <p><strong><?php echo htmlspecialchars($comment['firstName']); ?>:</strong> <?php echo htmlspecialchars($comment['comment']); ?></p>
-                            <?php endwhile; ?>
-                        </div>
-                    </div>
+        while ($comment = $comments->fetch_assoc()):
+        ?>
+            <p><strong><?php echo htmlspecialchars($comment['firstName']); ?>:</strong> <?php echo htmlspecialchars($comment['comment']); ?></p>
+        <?php endwhile; ?>
+    </div>
+</div>
+
                 </div>
             <?php endforeach; ?>
         </section>
     </main>
+
+    <script>
+        // Function to add a comment via AJAX
+        function addComment(placeID) {
+    const comment = $(`#comment-${placeID}`).val();
+    if (comment.trim() === '') {
+        alert("Comment cannot be empty.");
+        return;
+    }
+
+    $.ajax({
+        url: "add_comment.php",
+        type: "POST",
+        data: { comment: comment, placeID: placeID },
+        dataType: "json",
+        success: function (response) {
+            if (response.success) {
+                // Append the new comment to the comment list
+                const commentHTML = `<p><strong>${response.userName}:</strong> ${response.comment}</p>`;
+                $(`#comments-${placeID}`).append(commentHTML);
+
+                // Clear the comment textarea
+                $(`#comment-${placeID}`).val('');
+
+                // Show success message
+                alert(response.message);
+            } else {
+                alert("Failed to add comment: " + (response.error || "Unknown error."));
+            }
+        },
+        error: function () {
+            alert("An error occurred while adding the comment.");
+        }
+    });
+}
+
+
+        // Function to like a place via AJAX
+       function likePlace(placeID) {
+    $.ajax({
+        url: "add_like.php",
+        type: "POST",
+        data: { placeID: placeID },
+        dataType: "json",
+        success: function (response) {
+            if (response.success) {
+                // Update the like count on the button
+                const likeButton = $(`#like-btn-${placeID}`);
+                const likeCountElement = $(`#like-count-${placeID}`);
+
+                // Update the button's like count
+                likeCountElement.text(response.likeCount);
+
+                // Disable the button and show "Liked"
+                likeButton.prop("disabled", true).text(`Liked (${response.likeCount})`);
+
+                // Show success message
+                alert(response.message);
+            } else {
+                alert("Failed to like the place: " + (response.error || "Unknown error."));
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("An unexpected error occurred: " + error);
+        }
+    });
+}
+
+    </script>
 </body>
 </html>
 
