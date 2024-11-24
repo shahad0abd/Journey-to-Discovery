@@ -30,6 +30,7 @@ $user = $userResult->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User's Homepage</title>
     <link rel="stylesheet" href="User’shomepage.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <header>
@@ -61,7 +62,7 @@ $user = $userResult->fetch_assoc();
             <?php 
                 $userPhotoPath = "images/" . $user['photoFileName'];
                 if (!file_exists($userPhotoPath) || empty($user['photoFileName'])) {
-                    $userPhotoPath = 'images/defultphoto.jpg';
+                    $userPhotoPath = 'images/defaultphoto.jpg';
                 }
             ?>
             <img src="<?php echo htmlspecialchars($userPhotoPath); ?>" alt="User Photo">
@@ -102,70 +103,67 @@ $user = $userResult->fetch_assoc();
     </div>
 </div>
 
-<!-- Add the JavaScript here -->
 <script>
 // Fetch and display all travels on page load
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function () {
     fetchTravels('all'); // Fetch all travels
+
+    // Add event listener for country filter changes
+    $('#country-filter').on('change', function () {
+        const countryID = $(this).val(); // Get selected country ID
+        fetchTravels(countryID); // Fetch travels based on the selected country
+    });
 });
 
-// Add event listener for country filter changes
-document.getElementById('country-filter').addEventListener('change', function () {
-    const countryID = this.value; // Get selected country ID
-    fetchTravels(countryID); // Fetch travels based on the selected country
-});
-
-// Function to fetch travels based on the selected country
+// Function to fetch travels using jQuery's $.ajax()
 function fetchTravels(countryID) {
-    fetch('fetch_filtered_travels.php?country=' + countryID)
-        .then(response => response.json()) // Parse JSON response
-        .then(data => {
-            const tableBody = document.querySelector('.table-container tbody');
-            tableBody.innerHTML = ''; // Clear the table
+    $.ajax({
+        url: 'fetch_filtered_travels.php',
+        type: 'GET',
+        data: { country: countryID },
+        dataType: 'json',
+        success: function (data) {
+            const tableBody = $('.table-container tbody');
+            tableBody.empty(); // Clear the table
 
             if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="4">No travels found.</td></tr>';
+                tableBody.append('<tr><td colspan="4">No travels found.</td></tr>');
                 return;
             }
 
             // Populate the table with new data
             data.forEach(travel => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="traveller-info">
-                        <a href="javascript:void(0);" onclick="redirectToDetails(${travel.id})">
-                            ${travel.firstName}
-                        </a>
-                        <a href="images/${travel.placePhotoFileName}" target="_blank">
-                            <img src="images/${travel.placePhotoFileName}" alt="Place Photo">
-                        </a>
-                    </td>
-                    <td>${travel.country}</td>
-                    <td>${travel.month} ${travel.year}</td>
-                    <td>${travel.totalLikes}</td>
+                const row = `
+                    <tr>
+                        <td class="traveller-info">
+                            <a href="javascript:void(0);" onclick="redirectToDetails(${travel.id})">
+                                ${travel.firstName}
+                            </a>
+                            <a href="images/${travel.placePhotoFileName}" target="_blank">
+                                <img src="images/${travel.placePhotoFileName}" alt="Place Photo">
+                            </a>
+                        </td>
+                        <td>${travel.country}</td>
+                        <td>${travel.month} ${travel.year}</td>
+                        <td>${travel.totalLikes}</td>
+                    </tr>
                 `;
-                tableBody.appendChild(row);
+                tableBody.append(row);
             });
-        })
-        .catch(error => {
+        },
+        error: function (xhr, status, error) {
             console.error('Error fetching travels:', error);
-        });
+        }
+    });
 }
 
 function redirectToDetails(travelId) {
-    var form = document.createElement("form");
-    form.method = "POST";
-    form.action = "TravelDetails.php";
-
-    var input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "travel_id";
-    input.value = travelId;
-
-    form.appendChild(input);
-    document.body.appendChild(form);
+    const form = $('<form>', { method: 'POST', action: 'TravelDetails.php' });
+    $('<input>', { type: 'hidden', name: 'travel_id', value: travelId }).appendTo(form);
+    $('body').append(form);
     form.submit();
 }
+
 </script>
 </body>
 </html>
