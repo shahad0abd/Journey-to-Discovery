@@ -52,7 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <header>
-        <img src="images/Web2-logo.svg" alt="Logo" class="logo">
+        <a href="http://JourneyToDiscovery.infinityfreeapp.com" target="_blank">
+            <img src="images/Web2-logo.svg" alt="Logo" class="logo">
+        </a>
     </header>
     <main>
         <h1>Login</h1>
