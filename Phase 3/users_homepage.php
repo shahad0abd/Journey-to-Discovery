@@ -136,7 +136,7 @@ function fetchTravels(countryID) {
                 const row = `
                     <tr>
                         <td class="traveller-info">
-                            <a href="javascript:void(0);" onclick="redirectToDetails(${travel.id})">
+                            <a href="javascript:void(0);" onclick="redirectToDetails(${travel.id})" style="color: #FF5733;">
                                 ${travel.firstName}
                             </a>
                             <a href="images/${travel.placePhotoFileName}" target="_blank">
